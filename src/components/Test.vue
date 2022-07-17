@@ -27,9 +27,28 @@
                 <p>{{product.price}}</p>
             </div>
         </div>
+        <!-- computed property -->
+        <div>
+            <button @click="onSortPriceLow">Giá từ thấp tới cao</button>
+            <button  @click="onSortPriceHigh">Giá từ cao xuống thấp</button>
+
+        </div>
+        <p>there are products price lower 1200</p>
+        <div class="products" :class="classTesting">
+            <div class="products__item" 
+            v-for="product in productsComputed" 
+            :class="{cart: product.isCart}" 
+            @dblclick="onToogleCart($event, product)"
+            >
+                <img v-bind:src="product.img" alt="" class="products__thumb">
+                <h3>{{product.name}}</h3>
+                <p>{{product.price}}</p>
+            </div>
+        </div>
     </div>
 </template>
 <script>
+import { computed } from '@vue/runtime-core';
     export default {
         data() {
             return {
@@ -54,7 +73,7 @@
                     price: 1000,
                      img: "src/assets/img/cat-3.avif",
                      isCart: false,
-                    }
+                    },
                 ],
             }
         },
@@ -77,6 +96,23 @@
             },
             onToogleCart(event, product) {
                 product.isCart = !product.isCart;
+            },
+            onSortPriceLow() {
+                this.products.sort((a, b) => {
+                    return a.price - b.price;
+                })
+            },
+            onSortPriceHigh() {
+                this.products.sort((a, b) => {
+                    return b.price - a.price;
+                })
+            },
+        },
+        computed: {
+            productsComputed() {
+               return this.products.filter((product) => {
+                       return product.price < 1200; 
+                })
             }
         }
     }
